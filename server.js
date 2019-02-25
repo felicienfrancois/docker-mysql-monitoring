@@ -12,7 +12,8 @@ if (process.env.ENDPOINT) {
 	endpoints["/"+process.env.ENDPOINT.replace(/^\//, "")] = {
 		query: process.env.QUERY || "SELECT 1 AS UP",
 		singleLine: process.env.SINGLE_LINE || false,
-		fields: process.env.FIELDS && process.env.FIELDS.split(",")
+		fields: process.env.FIELDS && process.env.FIELDS.split(","),
+		connection: connection
 	}
 }
 let i=0;
@@ -21,7 +22,14 @@ while (i<2 || process.env["ENDPOINT_" + i] || process.env["ENDPOINT" + i]) {
 		endpoints["/"+(process.env["ENDPOINT_" + i] || process.env["ENDPOINT" + i]).replace(/^\//, "")] = {
 			query: process.env["QUERY_" + i] || process.env["QUERY" + i],
 			singleLine: process.env["SINGLE_LINE_" + i] || process.env["SINGLE_LINE" + i] || false,
-			fields: (process.env["FIELDS_" + i] || process.env["FIELDS" + i]) && (process.env["FIELDS_" + i] || process.env["FIELDS" + i]).split(",")
+			fields: (process.env["FIELDS_" + i] || process.env["FIELDS" + i]) && (process.env["FIELDS_" + i] || process.env["FIELDS" + i]).split(","),
+			connection: (process.env["MYSQL_HOST_" + i] || process.env["MYSQL_HOST" + i] || process.env["DATABASE_NAME_" + i] || process.env["DATABASE_NAME" + i]) ? mysql.createConnection({
+				  host: process.env["MYSQL_HOST_" + i] || process.env["MYSQL_HOST" + i] || process.env.MYSQL_HOST || 'localhost',
+				  port: process.env["MYSQL_PORT_" + i] || process.env["MYSQL_PORT" + i] || process.env.MYSQL_PORT || '3306',
+				  user: process.env["MYSQL_USER_" + i] || process.env["MYSQL_USER" + i] || process.env.MYSQL_USER || 'root',
+				  password: process.env["MYSQL_PASSWORD_" + i] || process.env["MYSQL_PASSWORD" + i] || process.env.MYSQL_PASSWORD || 'password',
+				  database: process.env["MYSQL_DATABASE_" + i] || process.env["MYSQL_DATABASE" + i] || process.env.DATABASE_NAME || null
+			} : connection
 		};
 	}
 	i++;
@@ -30,7 +38,8 @@ if (Object.keys(endpoints).length === 0) {
 	endpoints["/"] = {
 		query: "SELECT 1 AS UP",
 		singleLine: true,
-		fields: null
+		fields: null,
+		connection: connection
 	}
 }
 
@@ -39,8 +48,8 @@ http.createServer(function(req, resp) {
 	console.log("[Request] "+req.method + " " + req.url);
 	const endpoint = endpoints[req.url];
 	if (endpoint) {
-		connection.connect();
-		connection.query(endpoint.query, function (error, results, fields) {
+		endpoint.connection.connect();
+		endpoint.connection.query(endpoint.query, function (error, results, fields) {
 			if (error) {
 				console.error("[500] "+req.method + " " + req.url, error);
 				resp.statusCode = 500;
@@ -63,7 +72,7 @@ http.createServer(function(req, resp) {
 				resp.end(JSON.stringify(printedResult));
 			}
 		});
-		connection.end();
+		endpoint.connection.end();
 	} else {
 		console.error("[404] "+req.method + " " + req.url);
 		resp.statusCode = 404;
