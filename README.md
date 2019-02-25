@@ -16,9 +16,9 @@ Simple nodejs http endpoint to monitor database status
 
 ### Multiple endpoints configuration
 - `ENDPOINT_*`: used to define multiple endpoints. Replace `*`by incremental number
-- `QUERY_*`:  used to define multiple endpoints. Replace `*`by incremental number
-- `SINGLE_LINE_*`:  used to define multiple endpoints. Replace `*`by incremental number
-- `FIELDS_*`:  used to define multiple endpoints. Replace `*`by incremental number
+- `QUERY_*`:  used to define multiple endpoints. Default to `$QUERY`. Replace `*`by incremental number
+- `SINGLE_LINE_*`:  used to define multiple endpoints. Default to `$SINGLE_LINE`. Replace `*`by incremental number
+- `FIELDS_*`:  used to define multiple endpoints. Default to `$FIELDS`. Replace `*`by incremental number
 - `MYSQL_HOST_*`: mysql server hostname. Default to `$MYSQL_HOST`. Replace `*`by incremental number
 - `MYSQL_PORT_*`: mysql server port. Default to `$MYSQL_PORT`. Replace `*`by incremental number
 - `MYSQL_USER_*`: mysql user. Default to `$MYSQL_USER`. Replace `*`by incremental number
