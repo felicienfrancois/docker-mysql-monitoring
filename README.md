@@ -7,6 +7,8 @@ Simple nodejs http endpoint to monitor database status
 - `MYSQL_PORT`: mysql server port. Default `3306`
 - `MYSQL_USER`: mysql user. Default `root`
 - `MYSQL_PASSWORD`: mysql password. Default `root`
+- `MYSQL_PASSWORD`: mysql password. Default `root`
+- `DATABASE_NAME`: selected database name. Default none
 - `ENDPOINT`: endpoint uri
 - `QUERY`: sql query to execute. Default `SELECT 1 AS UP`
 - `SINGLE_LINE`: whereas result should be serialized as list (false) or single object (true). Default `false`
@@ -21,3 +23,4 @@ Simple nodejs http endpoint to monitor database status
 - `MYSQL_PORT_*`: mysql server port. Default to `$MYSQL_PORT`. Replace `*`by incremental number
 - `MYSQL_USER_*`: mysql user. Default to `$MYSQL_USER`. Replace `*`by incremental number
 - `MYSQL_PASSWORD_*`: mysql password. Default to `$MYSQL_PASSWORD`. Replace `*`by incremental number
+- `DATABASE_NAME_*`: selected database name. Default to `$DATABASE_NAME`.
