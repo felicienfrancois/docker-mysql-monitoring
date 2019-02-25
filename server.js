@@ -59,8 +59,8 @@ http.createServer(function(req, resp) {
 				console.error("[200] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) + "ms)");
 				resp.statusCode = 200;
 				resp.setHeader('Content-Type', 'application/json; charset=utf-8');
-				let printedResult = endpoint.singleLine ? results[0] : results;
-				if (endpoint.fields) {
+				let printedResult = results;
+				if (endpoint.fields && printedResult && printedResult.length) {
 					printedResult = printedResult.map(function(e) {
 						var r = {};
 						for (let f of endpoint.fields) {
@@ -69,6 +69,7 @@ http.createServer(function(req, resp) {
 						return r;
 					});
 				}
+				printedResult = endpoint.singleLine ? printedResult && printedResult[0] : printedResult;
 				resp.end(JSON.stringify(printedResult));
 			}
 		});
