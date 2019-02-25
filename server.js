@@ -47,7 +47,7 @@ http.createServer(function(req, resp) {
 				resp.setHeader('Content-Type', 'application/json; charset=utf-8');
 				resp.end(JSON.stringify(error));
 			} else {
-				console.error("[200] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) "ms)");
+				console.error("[200] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) + "ms)");
 				resp.statusCode = 200;
 				resp.setHeader('Content-Type', 'application/json; charset=utf-8');
 				let printedResult = endpoint.singleLine ? results[0] : results;
