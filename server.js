@@ -48,9 +48,8 @@ http.createServer(function(req, resp) {
 	console.log("[Request] "+req.method + " " + req.url);
 	const endpoint = endpoints[req.url];
 	if (endpoint) {
-		const connection = endpoint.connection || mysql.createPool(endpoint.connectionSettings);
-		connection.connect();
-		connection.query(endpoint.query, function (error, results, fields) {
+		endpoint.connection = endpoint.connection || mysql.createPool(endpoint.connectionSettings);
+		endpoint.connection.query(endpoint.query, function (error, results, fields) {
 			if (error) {
 				console.error("[500] "+req.method + " " + req.url, error);
 				resp.statusCode = 500;
@@ -73,7 +72,6 @@ http.createServer(function(req, resp) {
 				resp.end(JSON.stringify(printedResult));
 			}
 		});
-		connection.end();
 	} else {
 		console.error("[404] "+req.method + " " + req.url);
 		resp.statusCode = 404;
