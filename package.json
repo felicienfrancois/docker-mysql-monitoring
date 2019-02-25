@@ -1,0 +1,10 @@
+{
+  "name": "docker-mysql-monitoring",
+  "main": "server.js",
+  "dependencies": {
+    "mysql2": "^1.6.5"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
