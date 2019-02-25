@@ -29,7 +29,7 @@ while (i<2 || process.env["ENDPOINT_" + i] || process.env["ENDPOINT" + i]) {
 				  user: process.env["MYSQL_USER_" + i] || process.env["MYSQL_USER" + i] || process.env.MYSQL_USER || 'root',
 				  password: process.env["MYSQL_PASSWORD_" + i] || process.env["MYSQL_PASSWORD" + i] || process.env.MYSQL_PASSWORD || 'password',
 				  database: process.env["MYSQL_DATABASE_" + i] || process.env["MYSQL_DATABASE" + i] || process.env.DATABASE_NAME || null
-			} : connection
+			}) : connection
 		};
 	}
 	i++;
