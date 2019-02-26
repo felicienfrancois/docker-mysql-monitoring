@@ -38,7 +38,7 @@ services:
     volumes:
       - /data/db-master:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: myStrongPassword
+      MYSQL_ROOT_PASSWORD: myStrongPassword1
 
   db-slave:
     image: mariadb:latest
@@ -47,7 +47,7 @@ services:
     volumes:
       - /data/db-slave:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: myStrongPassword
+      MYSQL_ROOT_PASSWORD: myStrongPassword2
 
   monitoring:
     image: felicienfrancois/docker-mysql-monitoring
@@ -58,13 +58,13 @@ services:
     environment:
       MYSQL_HOST_1: db-master
       MYSQL_USER_1: root
-      MYSQL_PASSWORD_1: myStrongPassword
+      MYSQL_PASSWORD_1: myStrongPassword1
       ENDPOINT_1: /monitor-master
       QUERY_1: SHOW MASTER STATUS
       SINGLE_LINE_1: "true"
       MYSQL_HOST_2: db-slave
       MYSQL_USER_2: root
-      MYSQL_PASSWORD_2: myStrongPassword
+      MYSQL_PASSWORD_2: myStrongPassword2
       ENDPOINT_2: /monitor-slave
       QUERY_2: SHOW SLAVE STATUS
       FIELDS_2: Slave_IO_Running,Slave_SQL_Running
