@@ -48,7 +48,7 @@ if (Object.keys(endpoints).length === 0) {
 
 http.createServer(function(req, resp) {
 	let startTime = new Date().getTime();
-	console.log("[Request] "+req.method + " " + req.url);
+	console.log("[Req] "+req.method + " " + req.url);
 	const endpoint = endpoints[req.url];
 	if (endpoint) {
 		endpoint.connection = endpoint.connection || mysql.createPool(endpoint.connectionSettings);
