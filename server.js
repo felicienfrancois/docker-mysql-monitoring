@@ -13,6 +13,7 @@ if (process.env.ENDPOINT) {
 		query: process.env.QUERY || "SELECT 1 AS UP",
 		singleLine: process.env.SINGLE_LINE || false,
 		fields: process.env.FIELDS && process.env.FIELDS.split(","),
+		expect: process.env.EXPECT || null,
 		connectionSettings: connectionSettings
 	}
 }
@@ -23,6 +24,7 @@ while (i<2 || process.env["ENDPOINT_" + i] || process.env["ENDPOINT" + i]) {
 			query: process.env["QUERY_" + i] || process.env["QUERY" + i] || process.env.QUERY,
 			singleLine: process.env["SINGLE_LINE_" + i] || process.env["SINGLE_LINE" + i] || process.env.SINGLE_LINE || false,
 			fields: (process.env["FIELDS_" + i] || process.env["FIELDS" + i] || process.env.FIELDS) && (process.env["FIELDS_" + i] || process.env["FIELDS" + i] || process.env.FIELDS).split(","),
+			expect: process.env["EXPECT_" + i] || process.env["EXPECT" + i] || process.env.EXPECT || null,
 			connectionSettings: (process.env["MYSQL_HOST_" + i] || process.env["MYSQL_HOST" + i] || process.env["DATABASE_NAME_" + i] || process.env["DATABASE_NAME" + i]) ? {
 				  host: process.env["MYSQL_HOST_" + i] || process.env["MYSQL_HOST" + i] || process.env.MYSQL_HOST || 'localhost',
 				  port: process.env["MYSQL_PORT_" + i] || process.env["MYSQL_PORT" + i] || process.env.MYSQL_PORT || '3306',
@@ -39,6 +41,7 @@ if (Object.keys(endpoints).length === 0) {
 		query: "SELECT 1 AS UP",
 		singleLine: true,
 		fields: null,
+		expect: null,
 		connectionSettings: connectionSettings
 	}
 }
@@ -56,9 +59,24 @@ http.createServer(function(req, resp) {
 				resp.setHeader('Content-Type', 'application/json; charset=utf-8');
 				resp.end(JSON.stringify(error));
 			} else {
-				console.error("[200] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) + "ms)");
-				resp.statusCode = 200;
 				resp.setHeader('Content-Type', 'application/json; charset=utf-8');
+				let passTest = !endpoint.expect;
+				if (endpoint.expect) {
+					passTest = (function(result) {
+						try {
+							return eval(endpoint.expect);
+						} catch(e) {
+							console.error("Error while evaluating expect condition", e);
+							return false;
+						}
+					})(endpoint.singleLine ? results && results[0] : results);
+				}
+				resp.statusCode = passTest ? 200 : 417;
+				if (passTest) {
+					console.log("[200] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) + "ms)");
+				} else {
+					console.error("[417] "+req.method + " " + req.url + " (" + (new Date().getTime() - startTime) + "ms)");
+				}
 				let printedResult = results;
 				if (endpoint.fields && printedResult && printedResult.length) {
 					printedResult = printedResult.map(function(e) {

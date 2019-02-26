@@ -13,12 +13,14 @@ Simple nodejs http endpoint to monitor database status
 - `QUERY`: sql query to execute. Default `SELECT 1 AS UP`
 - `SINGLE_LINE`: whereas result should be serialized as list (false) or single object (true). Default `false`
 - `FIELDS`: list of fields that should be retained from query result
+- `EXPECT`: condition to evaluate on query result, written in Javascript. Example: `result["Slave_IO_Running"] = "Yes" && result["Slave_SQL_Running"] = "Yes"`. Alter response status code depending on result (pass = 200, fail = 417). Default `none`
 
 ### Multiple endpoints configuration
 - `ENDPOINT_*`: used to define multiple endpoints. Replace `*`by incremental number
 - `QUERY_*`:  used to define multiple endpoints. Default to `$QUERY`. Replace `*`by incremental number
 - `SINGLE_LINE_*`:  used to define multiple endpoints. Default to `$SINGLE_LINE`. Replace `*`by incremental number
 - `FIELDS_*`:  used to define multiple endpoints. Default to `$FIELDS`. Replace `*`by incremental number
+- `EXPECT_*`:  condition to evaluate on query result. Default to `$EXPECT`. Replace `*`by incremental number
 - `MYSQL_HOST_*`: mysql server hostname. Default to `$MYSQL_HOST`. Replace `*`by incremental number
 - `MYSQL_PORT_*`: mysql server port. Default to `$MYSQL_PORT`. Replace `*`by incremental number
 - `MYSQL_USER_*`: mysql user. Default to `$MYSQL_USER`. Replace `*`by incremental number
@@ -68,6 +70,7 @@ services:
       ENDPOINT_2: /monitor-slave
       QUERY_2: SHOW SLAVE STATUS
       FIELDS_2: Slave_IO_Running,Slave_SQL_Running
+      EXPECT_2: result["Slave_IO_Running"] = "Yes" && result["Slave_SQL_Running"] = "Yes"
       SINGLE_LINE_2: "true"
 
 networks:
