@@ -70,7 +70,7 @@ services:
       ENDPOINT_2: /monitor-slave
       QUERY_2: SHOW SLAVE STATUS
       FIELDS_2: Slave_IO_Running,Slave_SQL_Running
-      EXPECT_2: result["Slave_IO_Running"] = "Yes" && result["Slave_SQL_Running"] = "Yes"
+      EXPECT_2: result["Slave_IO_Running"] === "Yes" && result["Slave_SQL_Running"] === "Yes"
       SINGLE_LINE_2: "true"
 
 networks:
